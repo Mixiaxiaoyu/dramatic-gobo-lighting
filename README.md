@@ -1,34 +1,43 @@
-# Dramatic Gobo Lighting
+# Dramatic Gobo Lighting 中文说明
 
-中文说明见 [README.zh-CN.md](./README.zh-CN.md).
+English version: [README.en.md](./README.en.md)
 
-Self-contained GitHub-distributable Codex skill for adding dramatic projected gobo lighting to existing images or new generated scenes.
+这是一个可直接分发到 GitHub 的 Codex 技能，用来给已有图片或新生成图片加入戏剧性 gobo 投影打光。
 
-This package includes:
+这个版本已经是自包含结构，包含：
 
-- the skill instructions
-- the selector script
-- optimized bundled gobo assets
-- tag-based controls for background locking, angle randomization, edge softness, and projection scale
+- 技能说明文件
+- gobo 选择脚本
+- 压缩优化后的素材库
+- 基于标签的可控参数
 
-## What It Does
+支持的控制项包括：
 
-Use this skill to add projected:
+- 背景是否锁定
+- 光影角度是否随机
+- 光影边缘软硬程度
+- gobo 投影放大倍率
 
-- window light
-- venetian blind shadows
-- leaf shadows
-- caustic water reflections
-- graphic line shadows
-- abstract broken light
+## 这个技能能做什么
 
-The skill is designed for image edits where the user wants lighting changes without redesigning the underlying subject.
+它适合做这类效果：
 
-## Repository Layout
+- 窗格光影
+- 百叶窗光影
+- 植物叶影
+- 水波反射光影
+- 图形化线性投影
+- 抽象破碎光影
+
+它的核心目标不是改造主体造型，而是在尽量保留原图结构的前提下，重新设计画面的光影氛围。
+
+## 仓库结构
 
 ```text
 dramatic-gobo-lighting/
   README.md
+  README.en.md
+  README.zh-CN.md
   SKILL.md
   agents/
     openai.yaml
@@ -45,31 +54,31 @@ dramatic-gobo-lighting/
       windows/
 ```
 
-## Install
+## 安装方式
 
-Copy this folder into your local Codex skills directory as:
+把整个文件夹复制到本地 Codex 技能目录：
 
 ```text
 ~/.codex/skills/dramatic-gobo-lighting
 ```
 
-Typical Windows path:
+Windows 常见路径示例：
 
 ```text
-C:\Users\<you>\.codex\skills\dramatic-gobo-lighting
+C:\Users\<你自己的用户名>\.codex\skills\dramatic-gobo-lighting
 ```
 
-If you are standing in the repository root, you can test the selector with:
+如果你当前就在仓库根目录，可以用下面的命令测试选择脚本：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\select_gobo.ps1 -Brief "moody noir portrait with blind shadows"
 ```
 
-## Core Tags
+## 提示词固定标签
 
-Use these tags directly in the user prompt.
+你可以直接把这些标签写进用户提示词里，技能会优先识别它们。
 
-### Background control
+### 1. 背景控制
 
 ```text
 @gobo-bg: lock
@@ -77,7 +86,19 @@ Use these tags directly in the user prompt.
 @gobo-bg: auto
 ```
 
-### Angle control
+- `lock`
+  - 锁住背景颜色、背景层次和整体背景结构。
+  - 适合品牌背景、3D 渲染图、UI 图、复杂主体。
+
+- `free`
+  - 允许背景为了氛围变得更暗、更暖、更冷，或者更有戏剧性。
+  - 适合海报感、情绪感更强的图。
+
+- `auto`
+  - 由技能自动判断。
+  - 默认会优先照顾稳定性。
+
+### 2. 光影角度控制
 
 ```text
 @gobo-angle: fixed
@@ -85,7 +106,18 @@ Use these tags directly in the user prompt.
 @gobo-angle: auto
 ```
 
-### Edge softness
+- `fixed`
+  - 使用更稳定、更保守的投影角度和落点。
+  - 适合产品图、复杂 3D 图、信息密集的画面。
+
+- `random`
+  - 每次尝试都让光源方向和投影位置做受控随机。
+  - 适合找灵感、快速试不同气质。
+
+- `auto`
+  - 由技能自动选择。
+
+### 3. 光影边缘软硬程度
 
 ```text
 @gobo-edge: crisp
@@ -96,7 +128,27 @@ Use these tags directly in the user prompt.
 @gobo-edge: auto
 ```
 
-### Projection scale
+- `crisp`
+  - 边缘硬，黑白交界更清晰。
+  - 适合强烈阳光感、百叶窗感、建筑感。
+
+- `soft`
+  - 轻微软化边缘，但仍然保留清楚的图案识别。
+
+- `diffuse`
+  - 更明显的柔化，边界会更雾、更松。
+
+- `soft*2`
+  - 比普通 `soft` 再软一档。
+
+- `diffuse*2`
+  - 比普通 `diffuse` 再软一档。
+  - 适合你之前测试过的那种更柔和的过渡。
+
+- `auto`
+  - 由技能自动判断。
+
+### 4. 投影放大倍率
 
 ```text
 @gobo-scale: 0.75
@@ -106,111 +158,116 @@ Use these tags directly in the user prompt.
 @gobo-scale: 2.5
 ```
 
-Larger scale values make the projected pattern larger and more local.
+这个参数控制的不是图片分辨率，而是 gobo 投影在画面里“看起来有多大”。
 
-### Manual gobo selection
+- 值越大
+  - 图案越大
+  - 重复越少
+  - 更容易只出现在局部区域
+
+- 值越小
+  - 图案越密
+  - 重复越多
+  - 更容易铺满更大范围
+
+### 5. 手动指定 gobo
 
 ```text
 @gobo-file: GSG_Gobos_Windows_Blinds_07.jpg
 @gobo-file: GSG_Gobos_Caustics_Caustics_02.jpg
 ```
 
-Use the exact filename from [references/gobo-catalog.md](./references/gobo-catalog.md).
+请直接从 [references/gobo-catalog.md](./references/gobo-catalog.md) 里复制精确文件名。
 
-If this tag is present, it overrides automatic gobo selection and forces that exact reference.
+只要这个标签存在，它就会覆盖自动 gobo 选择，直接强制使用这张参考图。
 
-## Recommended Prompt Patterns
+## 推荐用法示例
 
-### Image Edit / User Uploads An Image
+### 图生图 / 用户上传图片
 
-Keep the background identical:
+#### 保持背景完全不变
 
 ```text
 @gobo-bg: lock @gobo-angle: fixed @gobo-edge: soft
-Give this render dramatic architectural window light while keeping the background the same.
+给这张渲染图加上戏剧性的窗格投影光，但保持背景完全不变。
 ```
 
-Let the background become moodier:
+#### 允许背景更有氛围
 
 ```text
 @gobo-bg: free @gobo-angle: fixed @gobo-edge: diffuse
-Add cinematic window light and allow the background atmosphere to shift darker.
+给这张图加上更电影感的窗影，并允许背景氛围变暗一点。
 ```
 
-Make the gobo larger so it only hits part of the frame:
+#### 让 gobo 只影响局部区域
 
 ```text
 @gobo-bg: free @gobo-angle: fixed @gobo-edge: soft @gobo-scale: 2.0
-Add a larger local window-light event that affects only one side of the composition.
+加一个更大的局部窗影，让光只落在画面一侧。
 ```
 
-Explore alternate angles:
+#### 每次都尝试不同光位
 
 ```text
 @gobo-bg: lock @gobo-angle: random @gobo-edge: soft
-Try a different but still usable gobo-light direction on this render.
+在保持主体稳定的前提下，尝试不同的 gobo 光位。
 ```
 
-Use one exact gobo from the catalog:
+#### 手动指定某一张 gobo
 
 ```text
 @gobo-bg: lock @gobo-angle: fixed @gobo-file: GSG_Gobos_Windows_Blinds_07.jpg
-Use this exact blinds gobo on the uploaded render and keep the background the same.
+对上传的渲染图使用这一张指定的百叶窗 gobo，并保持背景不变。
 ```
 
-### Text-to-Image / No Source Image
+### 文生图 / 不上传原图
 
-Generate a fashion portrait with venetian blinds:
+#### 生成百叶窗时尚人像
 
 ```text
 @gobo-bg: free @gobo-angle: fixed @gobo-edge: crisp
-A cinematic fashion portrait of a woman in a dark hotel room, dramatic venetian blind shadows across the wall and shoulder, hard sunlight, low ambient fill, editorial luxury mood.
+一个电影感时尚人像，人物站在偏暗的酒店房间里，墙面和肩膀上有清晰的百叶窗投影，强烈阳光，低环境光，高级时尚大片氛围。
 ```
 
-Generate a softer beauty image with plant shadows:
+#### 生成更柔和的植物叶影美妆图
 
 ```text
 @gobo-bg: free @gobo-angle: random @gobo-edge: diffuse
-A clean beauty portrait with soft tropical leaf-shadow lighting on the face and background, warm afternoon sun, airy highlights, premium skincare campaign look.
+一张干净的美妆人像，脸部和背景上有柔和的热带植物叶影，午后暖阳，通透高光，高级护肤广告质感。
 ```
 
-Generate a product shot with a larger local gobo event:
+#### 生成局部大窗影的产品图
 
 ```text
 @gobo-bg: free @gobo-angle: fixed @gobo-edge: soft @gobo-scale: 2.0
-A premium perfume bottle on a stone pedestal, a large localized window-light projection hitting only one side of the set, elegant shadows, luxury still-life photography.
+一只高端香水瓶放在石质底座上，只有画面一侧被大面积局部窗影照亮，阴影优雅，奢侈品静物摄影风格。
 ```
 
-Generate a watery caustics scene:
+#### 生成柔和水波光的场景
 
 ```text
 @gobo-bg: free @gobo-angle: random @gobo-edge: diffuse*2
-A sculptural cosmetic bottle in a sunlit spa setting with soft water-caustic reflections across the wall and surface, humid air, calm luxury atmosphere.
+一个雕塑感护肤瓶置于阳光洒入的 spa 空间中，墙面和台面上有非常柔和的水波反射光影，空气微湿，整体安静而高级。
 ```
 
-Generate with one exact gobo from the catalog:
+#### 文生图时手动指定某一张 gobo
 
 ```text
 @gobo-bg: free @gobo-angle: fixed @gobo-file: GSG_Gobos_Caustics_Caustics_02.jpg
-A premium skincare bottle in a quiet spa room, built around this exact caustics pattern, soft reflected water light across the wall, elegant luxury mood.
+一个高端护肤瓶置于安静的 spa 房间中，整体光影严格参考这张指定的水波 gobo，墙面出现柔和反射光，高级静奢氛围。
 ```
 
-## Distribution Notes
+## 分发到 GitHub 的方式
 
-- This GitHub version bundles optimized JPEG assets rather than the original 4K source files.
-- The bundled assets are intended as reference guides for generation and editing, not as archival masters.
-- The selector script assumes Windows PowerShell.
-- The image generation path still depends on the host Codex environment having `$imagegen` available.
+如果你要把它发给别人用，推荐直接把这个文件夹作为仓库根目录。
 
-## Publish To GitHub
-
-To share this with other people, make this folder the repository root, or upload the folder contents directly into a new repository.
-
-Recommended structure:
+推荐结构：
 
 ```text
 <repo-root>/
   README.md
+  README.en.md
+  README.zh-CN.md
   SKILL.md
   agents/
   references/
@@ -218,17 +275,25 @@ Recommended structure:
   assets/
 ```
 
-Anyone who downloads or clones the repository only needs to copy the whole folder into:
+别人下载或克隆之后，只需要把整个文件夹复制到：
 
 ```text
 ~/.codex/skills/dramatic-gobo-lighting
 ```
 
-After that, the skill is self-contained. It does not depend on your original local `Gobos ...` folders.
+就可以直接使用。
 
-## Practical Defaults
+这个版本已经不依赖你原始工作区里的 `Gobos ...` 外部素材目录。
 
-If no tags are provided, the skill behaves like this:
+## 素材说明
+
+- 这一版 GitHub 包内置的是压缩优化后的 JPG 素材，不是原始 4K 母版。
+- 这些素材是用来做图像生成和图生图参考的，不是用来做存档母版管理的。
+- 当前内置素材已经足够支撑选择脚本和投影参考，不会影响正常使用体验。
+
+## 默认行为
+
+如果用户没有写任何固定标签，技能会按下面的默认逻辑处理：
 
 ```text
 @gobo-bg: auto
@@ -237,4 +302,8 @@ If no tags are provided, the skill behaves like this:
 @gobo-scale: 1.0
 ```
 
-For complex edits, the skill still defaults toward preservation-first behavior.
+其中：
+
+- 复杂图片会优先偏向保守和稳定
+- 简单图片会允许更明显的气氛变化
+- 整体依然是 preservation-first，也就是优先保护原图主体、布局、材质和可识别元素
