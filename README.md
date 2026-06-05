@@ -2,9 +2,9 @@
 
 English version: [README.en.md](./README.en.md)
 
-这是一个可直接分发到 GitHub 的 Codex 技能，用来给已有图片或新生成图片加入戏剧性 gobo 投影打光。
+这是一个 Codex 技能，用来给已有图片或新生成图片加入戏剧性 gobo 投影打光。
 
-这个版本已经是自包含结构，包含：
+仓库内容包含：
 
 - 技能说明文件
 - gobo 选择脚本
@@ -31,32 +31,67 @@ English version: [README.en.md](./README.en.md)
 
 它的核心目标不是改造主体造型，而是在尽量保留原图结构的前提下，重新设计画面的光影氛围。
 
-## 仓库结构
+## 目录结构
 
 ```text
 dramatic-gobo-lighting/
-  README.md
-  README.en.md
-  README.zh-CN.md
-  SKILL.md
-  agents/
-    openai.yaml
-  references/
-    gobo-library.md
-  scripts/
-    select_gobo.ps1
-  assets/
-    gobos/
-      abstract/
-      caustics/
-      lines/
-      plants/
-      windows/
+├─ README.md                         ← 中文使用说明，仓库默认展示页
+├─ README.en.md                      ← 英文版使用说明
+├─ README.zh-CN.md                   ← 中文说明入口别名，兼容旧链接
+├─ LICENSE                           ← GPL-3.0 许可证
+├─ SKILL.md                          ← 技能主说明文件，供 Codex 调用
+├─ agents/
+│  └─ openai.yaml                    ← 技能代理配置文件
+├─ references/
+│  ├─ gobo-library.md                ← gobo 类型与素材参考说明
+│  ├─ gobo-catalog.md                ← 完整 gobo 文件名清单
+│  └─ gobo-name-quick-lookup.md      ← gobo 名字快捷查询
+├─ scripts/
+│  └─ select_gobo.ps1                ← 根据提示词选择 gobo 的脚本
+└─ assets/
+   ├─ examples/                      ← README 案例展示图
+   │  ├─ case-01-plants-portrait.png
+   │  ├─ case-02-window-perfume.png
+   │  ├─ case-03-abstract-rock.png
+   │  └─ case-04-blinds-fashion-red.png
+   └─ gobos/
+      ├─ abstract/                   ← 抽象破碎光影
+      ├─ caustics/                   ← 水波反射光影
+      ├─ lines/                      ← 线性/图形化投影
+      ├─ plants/                     ← 植物叶影
+      └─ windows/                    ← 窗格与百叶窗光影
 ```
 
-## 安装方式
+## 安装
 
-把整个文件夹复制到本地 Codex 技能目录：
+### 方式一：一行命令安装（推荐）
+
+```bash
+git clone https://github.com/Mixiaxiaoyu/dramatic-gobo-lighting.git ~/.codex/skills/dramatic-gobo-lighting
+```
+
+执行完成后，这个 skill 就会被安装到 Codex 的本地技能目录中。
+
+### 方式二：把下面这段话直接发给 Codex
+
+> 帮我安装 `dramatic-gobo-lighting` 这个 Codex skill，请按下面步骤做：
+>
+> 1. 确保 `~/.codex/skills/` 目录存在，不存在就创建。
+> 2. 执行 `git clone https://github.com/Mixiaxiaoyu/dramatic-gobo-lighting.git ~/.codex/skills/dramatic-gobo-lighting`
+> 3. 验证 `~/.codex/skills/dramatic-gobo-lighting/` 目录下能看到 `SKILL.md`、`assets/`、`references/`、`scripts/`。
+> 4. 安装完成后告诉我已经装好了。后续我提到 gobo lighting、窗格光影、百叶窗光影、水波光影之类需求时，优先调用这个 skill。
+
+把这段话直接复制给支持 shell 权限的 Codex 或 AI Agent，通常它就能自动完成安装。
+
+### 方式三：手动安装
+
+1. 克隆仓库到本地，或者下载 ZIP 后解压：
+
+```bash
+git clone https://github.com/Mixiaxiaoyu/dramatic-gobo-lighting.git
+```
+
+2. 把整个 `dramatic-gobo-lighting` 文件夹移动或复制到下面这个目录：
 
 ```text
 ~/.codex/skills/dramatic-gobo-lighting
@@ -68,7 +103,16 @@ Windows 常见路径示例：
 C:\Users\<你自己的用户名>\.codex\skills\dramatic-gobo-lighting
 ```
 
-如果你当前就在仓库根目录，可以用下面的命令测试选择脚本：
+3. 安装完成后，确认目录下至少有这些内容：
+
+```text
+SKILL.md
+assets/
+references/
+scripts/
+```
+
+4. 如果你想顺手做一次本地测试，也可以在仓库根目录执行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\select_gobo.ps1 -Brief "moody noir portrait with blind shadows"
@@ -181,6 +225,39 @@ powershell -ExecutionPolicy Bypass -File .\scripts\select_gobo.ps1 -Brief "moody
 
 只要这个标签存在，它就会覆盖自动 gobo 选择，直接强制使用这张参考图。
 
+快捷查询入口：
+
+- [gobo 名字快捷查询](./references/gobo-name-quick-lookup.md)
+- [完整 gobo 文件名清单](./references/gobo-catalog.md)
+
+## 案例展示
+
+下面这 4 张图就是这个 skill 的典型使用方向，分别对应植物叶影、窗格光影、抽象破碎光影和百叶窗光影。
+
+### 案例 1：植物叶影人像
+
+适合方向：`Plants / Palm`
+
+![植物叶影人像](./assets/examples/case-01-plants-portrait.png)
+
+### 案例 2：窗格光影产品图
+
+适合方向：`Windows / Window`
+
+![窗格光影产品图](./assets/examples/case-02-window-perfume.png)
+
+### 案例 3：抽象破碎光影静物
+
+适合方向：`Abstract`
+
+![抽象破碎光影静物](./assets/examples/case-03-abstract-rock.png)
+
+### 案例 4：百叶窗光影时尚人像
+
+适合方向：`Windows / Blinds`
+
+![百叶窗光影时尚人像](./assets/examples/case-04-blinds-fashion-red.png)
+
 ## 推荐用法示例
 
 ### 图生图 / 用户上传图片
@@ -256,40 +333,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\select_gobo.ps1 -Brief "moody
 @gobo-bg: free @gobo-angle: fixed @gobo-file: GSG_Gobos_Caustics_Caustics_02.jpg
 一个高端护肤瓶置于安静的 spa 房间中，整体光影严格参考这张指定的水波 gobo，墙面出现柔和反射光，高级静奢氛围。
 ```
-
-## 分发到 GitHub 的方式
-
-如果你要把它发给别人用，推荐直接把这个文件夹作为仓库根目录。
-
-推荐结构：
-
-```text
-<repo-root>/
-  README.md
-  README.en.md
-  README.zh-CN.md
-  SKILL.md
-  agents/
-  references/
-  scripts/
-  assets/
-```
-
-别人下载或克隆之后，只需要把整个文件夹复制到：
-
-```text
-~/.codex/skills/dramatic-gobo-lighting
-```
-
-就可以直接使用。
-
-这个版本已经不依赖你原始工作区里的 `Gobos ...` 外部素材目录。
-
-## 素材说明
-
-- 这一版 GitHub 包内置的是压缩优化后的 JPG 素材，不是原始 4K 母版。
-- 这些素材是用来做图像生成和图生图参考的，不是用来做存档母版管理的。
-- 当前内置素材已经足够支撑选择脚本和投影参考，不会影响正常使用体验。
 
 ## 默认行为
 
