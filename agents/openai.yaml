@@ -1,0 +1,7 @@
+interface:
+  display_name: "Dramatic Gobo Lighting"
+  short_description: "Apply projected gobo shadows for dramatic, cinematic lighting"
+  default_prompt: "Use $dramatic-gobo-lighting to add projected window, blinds, leaf, caustic, line, or abstract gobo lighting to an existing image or a new scene in this workspace."
+
+policy:
+  allow_implicit_invocation: true
